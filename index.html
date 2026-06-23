@@ -132,8 +132,8 @@
         shadow-intensity="1" shadow-softness="1"
         exposure="1.6" environment-intensity="1.8"
         autoplay
-        camera-orbit="-90deg 65deg 0.7m" 
-        camera-target="0m 0.09m 0m"
+        camera-orbit="-90deg 65deg 0.52m" 
+        camera-target="0m 0.05m 0m"
         min-camera-orbit="auto auto 0.1m" 
         max-camera-orbit="auto auto 5m"
         loading="eager" 
@@ -142,10 +142,10 @@
 
     <script>
         const CONFIG = {
-            mobileOrbit: "-90deg 65deg 0.8m",
-            desktopOrbit: "-90deg 65deg 0.7m",
-            mobileTarget: "0m 0.09m 0m",
-            desktopTarget: "0m 0.09m 0m"
+            mobileOrbit: "-90deg 65deg 0.6m",
+            desktopOrbit: "-90deg 65deg 0.52m",
+            mobileTarget: "0m 0.05m 0m",
+            desktopTarget: "0m 0.05m 0m"
         };
 
         const mv = document.querySelector('#clock-model');
@@ -165,7 +165,6 @@
             mv.fieldOfView = "auto";
         };
 
-        // Kopiowana 1:1, czysta struktura przełączania paneli z działającego kodu BALL
         const togglePanel = (id) => {
             const p = document.getElementById(id);
             const other = id === 'panel-ppls' ? 'panel-czasowniki' : 'panel-ppls';
