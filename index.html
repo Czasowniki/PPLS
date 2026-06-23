@@ -131,7 +131,6 @@
         camera-controls disable-pan
         shadow-intensity="1" shadow-softness="1"
         exposure="1.6" environment-intensity="1.8"
-        autoplay
         camera-orbit="-90deg 65deg 0.52m" 
         camera-target="0m 0.05m 0m"
         min-camera-orbit="auto auto 0.1m" 
@@ -150,11 +149,35 @@
 
         const mv = document.querySelector('#clock-model');
 
+        // Logika sterowania odtwarzaniem wstecz
+        let isPlaying = true;
+        let lastTime = 0;
+
+        function loopBackward(timestamp) {
+            if (!lastTime) lastTime = timestamp;
+            const delta = (timestamp - lastTime) / 1000;
+            lastTime = timestamp;
+
+            if (mv.model && mv.animationName && isPlaying) {
+                // Odejmujemy ułamki sekund, by cofać animację
+                let nextTime = mv.currentTime - delta;
+
+                // Reset do końca osi czasu, jeśli dojdziemy do zera
+                if (nextTime <= 0) {
+                    nextTime = mv.duration;
+                }
+                mv.currentTime = nextTime;
+            }
+            requestAnimationFrame(loopBackward);
+        }
+
         mv.addEventListener('load', () => {
             const availableAnimations = mv.availableAnimations;
             if (availableAnimations.length > 0) {
                 mv.animationName = availableAnimations[0];
-                mv.play();
+                // Ustawiamy czas na sam koniec, aby animacja ruszyła do tyłu od pierwszej klatki
+                mv.currentTime = mv.duration;
+                requestAnimationFrame(loopBackward);
             }
         });
 
@@ -183,17 +206,15 @@
 
         const pauseBtn = document.getElementById('pause-toggle');
         pauseBtn.onclick = () => {
-            const isP = pauseBtn.dataset.paused === "true";
-            if (!isP) {
-                mv.pause();
+            if (isPlaying) {
+                isPlaying = false;
                 document.getElementById('icon-pause').style.display = 'none';
                 document.getElementById('icon-play').style.display = 'block';
-                pauseBtn.dataset.paused = "true";
             } else {
-                mv.play();
+                isPlaying = true;
+                lastTime = 0; // zerujemy licznik delty przy wznowieniu ruchu
                 document.getElementById('icon-pause').style.display = 'block';
                 document.getElementById('icon-play').style.display = 'none';
-                pauseBtn.dataset.paused = "false";
             }
         };
 
