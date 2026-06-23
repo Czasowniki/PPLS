@@ -132,7 +132,6 @@
         shadow-intensity="1" shadow-softness="1"
         exposure="1.6" environment-intensity="1.8"
         autoplay
-        time-scale="-1"
         camera-orbit="-90deg 65deg 0.52m" 
         camera-target="0m 0.05m 0m"
         min-camera-orbit="auto auto 0.1m" 
@@ -144,71 +143,3 @@
     <script>
         const CONFIG = {
             mobileOrbit: "-90deg 65deg 0.6m",
-            desktopOrbit: "-90deg 65deg 0.52m",
-            mobileTarget: "0m 0.05m 0m",
-            desktopTarget: "0m 0.05m 0m"
-        };
-
-        const mv = document.querySelector('#clock-model');
-
-        mv.addEventListener('load', () => {
-            const availableAnimations = mv.availableAnimations;
-            if (availableAnimations.length > 0) {
-                mv.animationName = availableAnimations[0];
-                mv.play();
-            }
-        });
-
-        document.querySelector('#reset-view').onclick = () => {
-            const isMob = window.innerWidth < 768;
-            mv.cameraOrbit = isMob ? CONFIG.mobileOrbit : CONFIG.desktopOrbit;
-            mv.cameraTarget = isMob ? CONFIG.mobileTarget : CONFIG.desktopTarget;
-            mv.fieldOfView = "auto";
-        };
-
-        const togglePanel = (id) => {
-            const p = document.getElementById(id);
-            const other = id === 'panel-ppls' ? 'panel-czasowniki' : 'panel-ppls';
-            document.getElementById(other).classList.remove('visible');
-            p.classList.toggle('visible');
-        };
-        document.getElementById('toggle-ppls').onclick = () => togglePanel('panel-ppls');
-        document.getElementById('toggle-czasowniki').onclick = () => togglePanel('panel-czasowniki');
-
-        document.getElementById('theme-toggle').onclick = () => {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            mv.exposure = isDark ? "1.6" : "2.8";
-            document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#121212' : '#ffffff');
-        };
-
-        const pauseBtn = document.getElementById('pause-toggle');
-        pauseBtn.onclick = () => {
-            const isP = pauseBtn.dataset.paused === "true";
-            if (!isP) {
-                mv.pause();
-                document.getElementById('icon-pause').style.display = 'none';
-                document.getElementById('icon-play').style.display = 'block';
-                pauseBtn.dataset.paused = "true";
-            } else {
-                mv.play();
-                document.getElementById('icon-pause').style.display = 'block';
-                document.getElementById('icon-play').style.display = 'none';
-                pauseBtn.dataset.paused = "false";
-            }
-        };
-
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        if (isMobile) {
-            document.getElementById('ar-label').style.display = 'flex';
-            document.getElementById('action-toggle').onclick = () => mv.activateAR();
-        } else {
-            document.getElementById('fs-icon').style.display = 'block';
-            document.getElementById('action-toggle').onclick = () => {
-                if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-                else document.exitFullscreen();
-            };
-        }
-    </script>
-</body>
-</html>
